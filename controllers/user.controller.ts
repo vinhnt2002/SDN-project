@@ -17,3 +17,64 @@ export const testGetAllUser = CatchAsyncErrors(
     }
   }
 );
+
+export const testGetUserById = CatchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.params.id;
+      const user = await userModal.findById(userId)
+      return res.status(200).json({
+        success: true,
+        user
+      })
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+export const testCreateUser = CatchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const {name, email, password} = req.body;
+      const existedUser =  await userModal.findOne({email});
+
+      if(existedUser) {
+        return next(new ErrorHandler("Email is already existed", 400));
+      }
+
+      const user = await userModal.create({
+        name,
+        email,
+        password,
+        isVerified: true
+      })
+
+      res.status(200).json({
+        sucess: true,
+        user
+      })
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+export const testUpdateUser = CatchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const {name, email, password} = req.body;
+    const existedUser =  await userModal.findOne({email});
+    const user = await userModal.findByIdAndUpdate(userId, req.body);
+    
+    if(existedUser) {
+      return next(new ErrorHandler("Existed Email", 400));
+    }
+    const updatedUser = await userModal.findById(userId);
+    return res.status(200).json({
+      success: true,
+      updatedUser
+    })
+  }
+);
+
