@@ -50,7 +50,7 @@ export const testCreateUser = CatchAsyncErrors(
         isVerified: true
       })
 
-      res.status(200).json({
+        return res.status(200).json({
         sucess: true,
         user
       })
@@ -62,10 +62,11 @@ export const testCreateUser = CatchAsyncErrors(
 
 export const testUpdateUser = CatchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.params.id;
-    const {name, email, password} = req.body;
-    const existedUser =  await userModal.findOne({email});
-    const user = await userModal.findByIdAndUpdate(userId, req.body);
+    try {
+      const userId = req.params.id;
+      const {name, email, password} = req.body;
+      const existedUser =  await userModal.findOne({email});
+      const user = await userModal.findByIdAndUpdate(userId, req.body);
     
     if(existedUser) {
       return next(new ErrorHandler("Existed Email", 400));
@@ -75,6 +76,24 @@ export const testUpdateUser = CatchAsyncErrors(
       success: true,
       updatedUser
     })
+    } catch (error:any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+    
   }
 );
 
+export const testDeleteUser = CatchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+   try {
+    const userId = req.params.id;
+    const user = await userModal.findByIdAndDelete(userId);
+    return res.status(200).json({
+      success: true,
+      user
+    })
+   } catch (error:any) {
+    return next(new ErrorHandler(error.message, 500));
+   }
+  }
+);
