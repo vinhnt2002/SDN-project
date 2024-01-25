@@ -5,8 +5,8 @@ export const app = express();
 
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import userRouter from "./routes/user.route";
 import { ErrorMiddleWare } from "./middleware/error";
+import userRouter from "./routes/user.route";
 
 app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
@@ -17,8 +17,7 @@ app.use(
   })
 );
 
-
-// route
+//route
 app.use("/api/v1", userRouter)
 
 
