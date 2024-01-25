@@ -8,6 +8,8 @@ import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.route";
 import { ErrorMiddleWare } from "./middleware/error";
 
+
+var categoryRouter = require("./routes/categoryRouter");
 app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 
@@ -20,7 +22,7 @@ app.use(
 
 // route
 app.use("/api/v1", userRouter)
-
+app.use("/category", categoryRouter)
 
 //testing api
 app.use("/test-api", (req: Request, res: Response, next: NextFunction) => {
