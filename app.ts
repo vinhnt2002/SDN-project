@@ -7,6 +7,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.route";
 import { ErrorMiddleWare } from "./middleware/error";
+import productRouter from "./routes/product.route";
 
 app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
@@ -17,10 +18,10 @@ app.use(
   })
 );
 
-
 // route
-app.use("/api/v1", userRouter)
+app.use("/api/v1", userRouter);
 
+app.use("/api/v1", productRouter);
 
 //testing api
 app.use("/test-api", (req: Request, res: Response, next: NextFunction) => {
@@ -30,13 +31,11 @@ app.use("/test-api", (req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-
 //unknow api
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   const err = new Error(`Route ${req.originalUrl} not found`) as any;
   err.statusCode = 404;
   next(err);
 });
-
 
 app.use(ErrorMiddleWare);
