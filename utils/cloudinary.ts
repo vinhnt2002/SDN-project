@@ -4,15 +4,17 @@ export const uploadImageToCloudinary = async (
   image: string,
   folder: string,
   width?: number
-) => {
-  const result = await cloudinary.v2.uploader.upload(image, { width, folder });
-
-  // console.log(result);
-
-  return {
-    public_id: result.public_id,
-    url: result.secure_url,
-  };
+  ) => {
+    try {
+      const result = await cloudinary.v2.uploader.upload(image, { width, folder });
+      return {
+        public_id: result.public_id,
+        url: result.secure_url,
+      };
+    } catch (error) {
+      console.error("Error uploading image to Cloudinary:", error);
+      throw error; 
+    }
 };
 
 export const deleteImageFromCloudinary = async (public_id: string) => {
