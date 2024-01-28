@@ -4,7 +4,8 @@ export interface IAuction extends Document {
   productId: Schema.Types.ObjectId;
   startTime: Date;
   endTime: Date;
-  status: string;
+  auctionStatus: string;
+  auctionState: string;
   bids: Array<{
     userId: string;
     amount: number;
@@ -17,7 +18,7 @@ const auctionSchema: Schema<IAuction> = new mongoose.Schema(
   {
     productId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Product", 
+      ref: "Product",
       required: true,
     },
     startTime: {
@@ -28,10 +29,15 @@ const auctionSchema: Schema<IAuction> = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    status: {
+    auctionStatus: {
       type: String,
-      enum: ["pending", "active", "ended"],
+      enum: ["pending", "approved", "rejected"],
       default: "pending",
+    },
+    auctionState: {
+      type: String,
+      enum: ["upcoming", "open", "ended"],
+      default: "upcoming",
     },
     bids: [
       {
@@ -55,9 +61,19 @@ const auctionSchema: Schema<IAuction> = new mongoose.Schema(
   { timestamps: true }
 );
 
-const AuctionModel: Model<IAuction> = mongoose.model<IAuction>(
+
+// NOT FINSISH HERE
+auctionSchema.pre<IAuction>('save', function(this: IAuction,next){
+    if(this.isModified('auctionStatus') && this.auctionStatus === 'approved'){
+      this.auctionState = 'upcoming';
+    }
+
+    next()
+})
+
+const auctionModel: Model<IAuction> = mongoose.model<IAuction>(
   "Auction",
   auctionSchema
 );
 
-export default AuctionModel;
+export default auctionModel;

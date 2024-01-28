@@ -19,11 +19,15 @@ const productSchema: Schema<IProduct> = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
+      required: [true, "Please enter desc"],
+    },
+    thumbnail: {
+      public_id: String,
+      url: String,
     },
     price: {
       type: Number,
-      required: true,
+      required: [true, "Please enter price"],
     },
     auctionId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -34,6 +38,6 @@ const productSchema: Schema<IProduct> = new mongoose.Schema(
 );
 
 
-const ProductModel: Model<IProduct> = mongoose.model<IProduct>("Product", productSchema);
+const productModel: Model<IProduct> = mongoose.model<IProduct>("Product", productSchema);
 
-export default ProductModel;
+export default productModel;

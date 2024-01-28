@@ -2,7 +2,7 @@ import cloudinary from "cloudinary";
 
 export const uploadImageToCloudinary = async (
   image: string,
-  folder: string,
+  folder: "avatars" | "orchid" ,
   width?: number
   ) => {
     try {
