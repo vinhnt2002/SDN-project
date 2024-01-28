@@ -21,6 +21,13 @@ app.use(
 app.use("/api/v1", userRouter)
 
 
+// 1 function la 1 middleware => gate (cửa)
+// 2 tham số
+
+  //1: đường dẫn
+  //2: callbackFunctiom
+
+
 //testing api
 app.use("/test-api", (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
@@ -28,6 +35,8 @@ app.use("/test-api", (req: Request, res: Response, next: NextFunction) => {
     message: "Api test working",
   });
 });
+
+
 
 
 //unknow api
