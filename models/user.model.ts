@@ -47,7 +47,8 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
       url: String,
     },
     role: {
-      type: String,
+      type: String ,
+      enum: ['admin', 'staff', 'user'],
       default: "user",
     },
     isVerified: {
@@ -76,6 +77,13 @@ userSchema.methods.comparePassword = async function (enteredPassword: string) : 
 
 
 //JWT  -- TODO
+userSchema.methods.signAccessToken = function () {
+  return jwt.sign({id: this.id}, process.env.ACCESS_TOKEN || "", {expiresIn: "5m"})
+}
+
+userSchema.methods.signRefreshToken = function () {
+  return jwt.sign({id: this.id}, process.env.REFRESH_TOKEN || "", {expiresIn: "3d"})
+}
 
 const userModal = mongoose.model<IUser>("User", userSchema);
 

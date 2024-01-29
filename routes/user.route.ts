@@ -1,20 +1,25 @@
 
 
 import express from 'express'
-import { addUser, deleteUser, getAllUsers, testGetAllUser, updateUserByID } from '../controllers/user.controller'
+import { authorized, isAuthenticated } from '../middleware/auth'
+import { deleteUser, getAllUsers, getUserInfo, updatePasswordUser, updateProfilePicture, updateUser, updateUserRole } from '../controllers/user.controller'
 
 
 const userRouter = express.Router()
 
-userRouter.get("/users", testGetAllUser)
+userRouter.get("/user-info", isAuthenticated , getUserInfo)
 
-userRouter.get("/get-user/:id", getAllUsers)
+userRouter.put("/update-user", isAuthenticated, updateUser)
 
-userRouter.post("/add-user", addUser)
+userRouter.put("/update-user-password", isAuthenticated, updatePasswordUser)
 
-userRouter.put("/update-user/:id", updateUserByID)
+userRouter.put("/update-user-avatar", isAuthenticated, updateProfilePicture)
 
-userRouter.delete("/delete-user/:id", deleteUser)
+userRouter.get("/users", isAuthenticated, authorized("admin"), getAllUsers)
+
+userRouter.put("/update-role", isAuthenticated, authorized("admin"), updateUserRole)
+
+userRouter.delete("/delete-user/:id", isAuthenticated, authorized("admin"), deleteUser)
 
 
 export default userRouter
