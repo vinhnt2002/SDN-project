@@ -40,6 +40,77 @@ export const createProduct = CatchAsyncErrors(async (req: Request, res: Response
     }
 })
 
+export const getAllProducts = CatchAsyncErrors(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const products = await productModel.find({});
+
+
+
+        res.status(200).json({
+            success: true,
+            products
+        })
+
+
+
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+})
+
+export const getProductById = CatchAsyncErrors(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {productId} = req.params
+
+        
+        if(!productId){
+            return next(new ErrorHandler("Product ID not found",404))
+        }
+        
+        const product = await productModel.findById(productId);
+
+        if(!product){
+            return next(new ErrorHandler("Product not found",404))
+        }
+
+        res.status(200).json({
+            success: true,
+            product
+        })
+
+
+
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+})
+
+
+export const updateProductWIthId = CatchAsyncErrors(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {productId} = req.params
+        const data = req.body
+        
+        if(!productId){
+            return next(new ErrorHandler("Product ID not found",404))
+        }
+        
+        const product = await productModel.findByIdAndUpdate(productId, {data, new: true});
+
+        res.status(200).json({
+            success: true,
+            product,
+            message: "update successfully"
+        })
+
+
+
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+})
+
 
 // update info product role:(staff-admin) --TODO
 

@@ -21,7 +21,36 @@ export const createAuction = CatchAsyncErrors(async (req: Request, res: Response
     }
 })
 
+export const getAllAuction = CatchAsyncErrors(async (req: Request, res: Response, next: NextFunction) => {
+    try {
 
+       const auctions =  await auctionModel.find({})
+
+        res.status(201).json({
+            success: true,
+            auctions
+        })
+
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+})
+
+export const getAuctionById = CatchAsyncErrors(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const {auctionId} = req.params
+       const auction =  await auctionModel.findById(auctionId)
+
+        res.status(201).json({
+            success: true,
+            auction
+        })
+
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+})
 // register to join auction --TODO
 
 
